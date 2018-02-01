@@ -3,43 +3,12 @@
 }
 
 <div class="row">
-    <iframe id="thirdPartySite" src="" allowtransparency="true" scrolling="yes" width="100%" height="900px"></iframe>
+    <iframe id="thirdPartySite" src="" allowtransparency="true" scrolling="yes" style="width: 100%; height: 900px; border: none; display: none;"></iframe>
 </div>
 
 @section scripts
 {
     <script type="text/javascript">
-        function iframeRef(frameRef) {
-            return frameRef.contentWindow
-                ? frameRef.contentWindow.document
-                : frameRef.contentDocument;
-        }
-
-        function checkIFrame(onload) {
-            // Get a handle to the iframe element
-            var iframe = document.getElementById("thirdPartySite");
-            var iframeDoc = (iframe.contentWindow || iframe.contentDocument);
-
-            if (typeof iframeDoc !== 'undefined') {
-                // Check if loading is complete
-                if (iframeDoc.readyState == 'complete') {
-                    iframe.contentWindow.onload = function() {
-                        alert("I am loaded");
-                    };
-                    // The loading is complete, call the function we want executed once the iframe is loaded
-                    onload();
-                    return;
-                }
-            }
-
-            // If we are here, it is not loaded. Set things up so we check   the status again in 100 milliseconds
-            window.setTimeout(function() {
-                    checkIFrame(onload);
-                },
-                100);
-        };
-
-
         $(function() {
             var davesGmailLink = $('#davesGithub');
 
@@ -61,25 +30,11 @@
                                 password.value = "password1";
                                 var form = userId.form;
                                 form.submit();
+                                iframe.show();
                             }
                         });
 
-                    iframe.attr('src', '/Home/About');
-
-                    /*checkIFrame(function() {
-                        // once loaded
-                        var iframeDoc = iframeRef(iframe);
-
-                        var userId = iframeDoc.getElementById('UserName');
-                        var password = iframeDoc.getElementById('Password');
-                        userId.value = "userId";
-                        password.value = "password1";
-                        var form = userId.form;
-                        form.submit();
-                    });*/
-
-
-                    // set the source
+                    iframe.attr('src', '/Home/Login');
 
 
                     /*

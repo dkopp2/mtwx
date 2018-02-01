@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using WebApplication2.Models;
+﻿using System.Web.Mvc;
+using Mtwx.Web.Models;
 
-namespace WebApplication2.Controllers
+namespace Mtwx.Web.Controllers
 {
     public class HomeController : Controller
     {
@@ -14,7 +10,7 @@ namespace WebApplication2.Controllers
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Login()
         {
             ViewBag.Message = "Your application description page.";
 
@@ -22,7 +18,7 @@ namespace WebApplication2.Controllers
         }
 
         [HttpPost]
-        public ActionResult About(User user)
+        public ActionResult Login(User user)
         {
             return RedirectToAction("Contact");
         }
