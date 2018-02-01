@@ -1,0 +1,126 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="row">
+    <iframe id="thirdPartySite" src="" allowtransparency="true" scrolling="yes" width="100%" height="900px"></iframe>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        function iframeRef(frameRef) {
+            return frameRef.contentWindow
+                ? frameRef.contentWindow.document
+                : frameRef.contentDocument;
+        }
+
+        function checkIFrame(onload) {
+            // Get a handle to the iframe element
+            var iframe = document.getElementById("thirdPartySite");
+            var iframeDoc = (iframe.contentWindow || iframe.contentDocument);
+
+            if (typeof iframeDoc !== 'undefined') {
+                // Check if loading is complete
+                if (iframeDoc.readyState == 'complete') {
+                    iframe.contentWindow.onload = function() {
+                        alert("I am loaded");
+                    };
+                    // The loading is complete, call the function we want executed once the iframe is loaded
+                    onload();
+                    return;
+                }
+            }
+
+            // If we are here, it is not loaded. Set things up so we check   the status again in 100 milliseconds
+            window.setTimeout(function() {
+                    checkIFrame(onload);
+                },
+                100);
+        };
+
+
+        $(function() {
+            var davesGmailLink = $('#davesGithub');
+
+            davesGmailLink.on("click",
+                function() {
+                    console.log("click");
+                    var iframe = $('#thirdPartySite');
+                    iframe.on('load',
+                        function() {
+                            console.log('ready');
+                            var frame = document.getElementById("thirdPartySite");
+                            var innerDoc = (frame.contentDocument)
+                                ? frame.contentDocument
+                                : frame.contentWindow.document;
+                            var userId = innerDoc.getElementById('UserName');
+                            var password = innerDoc.getElementById('Password');
+                            if (typeof userId !== 'undefined' && userId) {
+                                userId.value = "userId";
+                                password.value = "password1";
+                                var form = userId.form;
+                                form.submit();
+                            }
+                        });
+
+                    iframe.attr('src', '/Home/About');
+
+                    /*checkIFrame(function() {
+                        // once loaded
+                        var iframeDoc = iframeRef(iframe);
+
+                        var userId = iframeDoc.getElementById('UserName');
+                        var password = iframeDoc.getElementById('Password');
+                        userId.value = "userId";
+                        password.value = "password1";
+                        var form = userId.form;
+                        form.submit();
+                    });*/
+
+
+                    // set the source
+
+
+                    /*
+                    var createCORSRequest = function(method, url) {
+                        var xhr = new XMLHttpRequest();
+                        if ("withCredentials" in xhr) {
+                            // Most browsers.
+                            xhr.open(method, url, true);
+                        } else if (typeof XDomainRequest != "undefined") {
+                            // IE8 & IE9
+                            xhr = new XDomainRequest();
+                            xhr.open(method, url);
+                        } else {
+                            // CORS not supported.
+                            xhr = null;
+                        }
+                        return xhr;
+                    };
+
+                    var url = 'https://github.com/session';
+                    var method = 'POST';
+                    var xhr = createCORSRequest(method, url);
+
+                    xhr.onload = function() {
+                        // Success code goes here.
+                        alert("CORS supported");
+                    };
+
+                    xhr.onerror = function() {
+                        // Error code goes here.
+                        alert("POST failed");
+                    };
+
+                    xhr.withCredentials = true;
+                    xhr.send();
+                    */
+
+
+                    // load the frame with gmail
+                });
+        });
+    </script>
+}
+
