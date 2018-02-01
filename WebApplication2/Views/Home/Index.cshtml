@@ -9,7 +9,9 @@
 @section scripts
 {
     <script type="text/javascript">
-        $(function() {
+        $(function () {
+            $('[data-toggle="popover"]').popover(); 
+
             var davesGmailLink = $('#davesGithub');
 
             davesGmailLink.on("click",
