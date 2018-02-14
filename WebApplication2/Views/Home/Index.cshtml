@@ -10,14 +10,47 @@
 {
     <script type="text/javascript">
         $(function () {
-            $('[data-toggle="popover"]').popover(); 
+            $('[data-toggle="popover"]').popover();
+            var homesteadVillage = $('#homesteadVillage');
+            var iframe = $('#thirdPartySite');
+
+            homesteadVillage.on('click',
+                function() {
+                    console.log("click");
+                    var userNameField = "user_login";
+                    var passwordField = "user_pass";
+                    var href = $(this).data("href");
+                    var userName = $(this).data("user-id");
+                    var passwordVal = $(this).data("password");
+
+                    iframe.off('load');
+                    iframe.on('load',
+                        function() {
+                            console.log('ready');
+                            var frame = document.getElementById("thirdPartySite");
+                            var innerDoc = (frame.contentDocument)
+                                ? frame.contentDocument
+                                : frame.contentWindow.document;
+                            var userId = innerDoc.getElementById(userNameField);
+                            var password = innerDoc.getElementById(passwordField);
+                            if (typeof userId !== 'undefined' && userId) {
+                                userId.value = userName;
+                                password.value = passwordVal;
+                                var form = userId.form;
+                                form.submit();
+                                iframe.show();
+                            }
+                        });
+
+                    iframe.attr('src', href);
+                });
 
             var davesGmailLink = $('#davesGithub');
 
             davesGmailLink.on("click",
                 function() {
                     console.log("click");
-                    var iframe = $('#thirdPartySite');
+
                     iframe.on('load',
                         function() {
                             console.log('ready');
