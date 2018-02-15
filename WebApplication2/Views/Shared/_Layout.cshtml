@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Site Access Wrapper</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
@@ -25,7 +25,7 @@
                             <button class="btn btn-danger" data-toggle="popover" data-content="Simply choose a site to navigate to and all of your dreams will come true." data-placement="bottom" data-trigger="hover">Choose...</button>
                             <button data-toggle="dropdown" class="btn btn-danger dropdown-toggle"><span class="caret"></span></button>
                             <ul class="dropdown-menu">
-                                <li><a id="homesteadVillage" href="#" data-href="https://www.homesteadvillage.org/login/" data-user-id="Village" data-password="1800Marietta">Homestead Village</a></li>
+                                <li><a id="homesteadVillage" href="#" data-href="https://www.homesteadvillage.org/login/" data-login-action="https://www.homesteadvillage.org/login/" data-user-id="Village" data-password="1800Marietta">Homestead Village</a></li>
                                 <li><a id="davesGithub" href="#">Dave's Github</a></li>
                                 <li><a href="#">Another site</a></li>
                                 <li><a href="#">Jodi's Super-Secret Bank Account</a></li>
@@ -42,7 +42,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Site Access Wrapper</p>
         </footer>
     </div>
 

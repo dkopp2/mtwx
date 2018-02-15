@@ -3,7 +3,7 @@
 }
 
 <div class="row">
-    <iframe id="thirdPartySite" src="" allowtransparency="true" scrolling="yes" style="width: 100%; height: 900px; border: none; display: none;"></iframe>
+    <iframe id="thirdPartySite" src="" allowtransparency="true" scrolling="yes" style="width: 100%; height: 1000px; border: 0;"></iframe>
 </div>
 
 @section scripts
@@ -12,7 +12,7 @@
         $(function () {
             $('[data-toggle="popover"]').popover();
             var homesteadVillage = $('#homesteadVillage');
-            var iframe = $('#thirdPartySite');
+            var iframe = $('#thirdPartySite')[0];
 
             homesteadVillage.on('click',
                 function() {
@@ -20,29 +20,57 @@
                     var userNameField = "user_login";
                     var passwordField = "user_pass";
                     var href = $(this).data("href");
+                    var loginAction = $(this).data("login-action");
                     var userName = $(this).data("user-id");
                     var passwordVal = $(this).data("password");
 
-                    iframe.off('load');
-                    iframe.on('load',
-                        function() {
-                            console.log('ready');
-                            var frame = document.getElementById("thirdPartySite");
-                            var innerDoc = (frame.contentDocument)
-                                ? frame.contentDocument
-                                : frame.contentWindow.document;
-                            var userId = innerDoc.getElementById(userNameField);
-                            var password = innerDoc.getElementById(passwordField);
-                            if (typeof userId !== 'undefined' && userId) {
-                                userId.value = userName;
-                                password.value = passwordVal;
-                                var form = userId.form;
-                                form.submit();
-                                iframe.show();
-                            }
-                        });
+                    $.getJSON(document.location.protocol + '//allorigins.me/get?url=' + encodeURIComponent(href) + '&callback=?', function (data) {
 
-                    iframe.attr('src', href);
+                        var doc = iframe.document;
+                        if(iframe.contentDocument) {
+                            doc = iframe.contentDocument;
+                        } else if(iframe.contentWindow) {
+                            doc = iframe.contentWindow.document;
+                        }
+
+                        $('#thirdPartySite').on('load',
+                            function () {
+                                var userId = doc.getElementById(userNameField);
+                                var password = doc.getElementById(passwordField);
+
+                                if (typeof userId !== 'undefined' && userId) {
+                                    userId.value = userName;
+                                    password.value = passwordVal;
+                                    var form = userId.form;
+                                    form.action = loginAction;
+                                    form.submit();
+                                }
+                            });
+
+                        // load the data into the iframe
+                        //alert(data.contents);
+                        //$('#thirdPartySite').show();
+                        //$('#thirdPartySite').html(data.contents);
+
+                        // This iframe sillyness is to put the html into a css sandbox (so it doesn't affect the main website)
+
+                        doc.open();
+                        doc.writeln(data.contents);
+                        doc.close();
+                        //$('#output-json').text(JSON.stringify(data));
+
+
+
+                        /*var frame = document.getElementById("thirdPartySite");
+                        var innerDoc = (frame.contentDocument)
+                            ? frame.contentDocument
+                            : frame.contentWindow.document;
+
+                        */
+                    });
+
+
+
                 });
 
             var davesGmailLink = $('#davesGithub');
