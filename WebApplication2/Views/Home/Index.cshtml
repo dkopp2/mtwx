@@ -9,136 +9,66 @@
 @section scripts
 {
     <script type="text/javascript">
-        $(function () {
-            $('[data-toggle="popover"]').popover();
-            var homesteadVillage = $('#homesteadVillage');
-            var iframe = $('#thirdPartySite')[0];
+        var clearSite = function() {
+            $('#thirdPartySite').attr('src', 'about:blank');
+        }
 
-            homesteadVillage.on('click',
-                function() {
-                    console.log("click");
-                    var userNameField = "user_login";
-                    var passwordField = "user_pass";
-                    var href = $(this).data("href");
-                    var loginAction = $(this).data("login-action");
-                    var userName = $(this).data("user-id");
-                    var passwordVal = $(this).data("password");
+        var loadSite = function () {
+            clearSite();
+            console.log("click");
+            var userNameField = $(this).data("user-id-field");
+            var passwordField = $(this).data("password-field");
+            var href = $(this).data("href");
+            var loginAction = $(this).data("login-action");
+            var userName = $(this).data("user-id");
+            var passwordVal = $(this).data("password");
 
-                    $.getJSON(document.location.protocol + '//allorigins.me/get?url=' + encodeURIComponent(href) + '&callback=?', function (data) {
+            $.getJSON(
+                document.location.protocol + '//allorigins.me/get?url=' + encodeURIComponent(href) + '&callback=?',
+                function(data) {
+                    //$('#thirdPartySite').hide();
 
-                        var doc = iframe.document;
-                        if(iframe.contentDocument) {
-                            doc = iframe.contentDocument;
-                        } else if(iframe.contentWindow) {
-                            doc = iframe.contentWindow.document;
-                        }
+                    var iframe = $('#thirdPartySite')[0];
+                    var doc = iframe.document;
+                    if (iframe.contentDocument) {
+                        doc = iframe.contentDocument;
+                    } else if (iframe.contentWindow) {
+                        doc = iframe.contentWindow.document;
+                    }
 
-                        $('#thirdPartySite').on('load',
-                            function () {
-                                var userId = doc.getElementById(userNameField);
-                                var password = doc.getElementById(passwordField);
-
-                                if (typeof userId !== 'undefined' && userId) {
-                                    userId.value = userName;
-                                    password.value = passwordVal;
-                                    var form = userId.form;
-                                    form.action = loginAction;
-                                    form.submit();
-                                }
-                            });
-
-                        // load the data into the iframe
-                        //alert(data.contents);
-                        //$('#thirdPartySite').show();
-                        //$('#thirdPartySite').html(data.contents);
-
-                        // This iframe sillyness is to put the html into a css sandbox (so it doesn't affect the main website)
-
-                        doc.open();
-                        doc.writeln(data.contents);
-                        doc.close();
-                        //$('#output-json').text(JSON.stringify(data));
-
-
-
-                        /*var frame = document.getElementById("thirdPartySite");
-                        var innerDoc = (frame.contentDocument)
-                            ? frame.contentDocument
-                            : frame.contentWindow.document;
-
-                        */
-                    });
-
-
-
-                });
-
-            var davesGmailLink = $('#davesGithub');
-
-            davesGmailLink.on("click",
-                function() {
-                    console.log("click");
-
-                    iframe.on('load',
+                    $('#thirdPartySite').on('load',
                         function() {
-                            console.log('ready');
-                            var frame = document.getElementById("thirdPartySite");
-                            var innerDoc = (frame.contentDocument)
-                                ? frame.contentDocument
-                                : frame.contentWindow.document;
-                            var userId = innerDoc.getElementById('UserName');
-                            var password = innerDoc.getElementById('Password');
+                            var userId = doc.getElementById(userNameField);
+                            var password = doc.getElementById(passwordField);
+
                             if (typeof userId !== 'undefined' && userId) {
-                                userId.value = "userId";
-                                password.value = "password1";
+                                userId.value = userName;
+                                password.value = passwordVal;
                                 var form = userId.form;
+                                form.action = loginAction;
                                 form.submit();
-                                iframe.show();
                             }
+                            //$('#thirdPartySite').show();
                         });
-
-                    iframe.attr('src', '/Home/Login');
-
-
-                    /*
-                    var createCORSRequest = function(method, url) {
-                        var xhr = new XMLHttpRequest();
-                        if ("withCredentials" in xhr) {
-                            // Most browsers.
-                            xhr.open(method, url, true);
-                        } else if (typeof XDomainRequest != "undefined") {
-                            // IE8 & IE9
-                            xhr = new XDomainRequest();
-                            xhr.open(method, url);
-                        } else {
-                            // CORS not supported.
-                            xhr = null;
-                        }
-                        return xhr;
-                    };
-
-                    var url = 'https://github.com/session';
-                    var method = 'POST';
-                    var xhr = createCORSRequest(method, url);
-
-                    xhr.onload = function() {
-                        // Success code goes here.
-                        alert("CORS supported");
-                    };
-
-                    xhr.onerror = function() {
-                        // Error code goes here.
-                        alert("POST failed");
-                    };
-
-                    xhr.withCredentials = true;
-                    xhr.send();
-                    */
-
-
-                    // load the frame with gmail
+                    // This iframe sillyness is to put the html into a css sandbox (so it doesn't affect the main website)
+                    doc.open();
+                    doc.writeln(data.contents);
+                    doc.close();
                 });
+
+
+        };
+
+        $(function() {
+            $('[data-toggle="popover"]').popover();
+
+            $('#homesteadVillage').on('click', loadSite);
+            $('#myFreeCycle').on('click', loadSite);
+            $('#volvoCommunity').on('click', loadSite);
+            
+            $('#evoqueForums').on('click', loadSite);
         });
+
     </script>
 }
 
