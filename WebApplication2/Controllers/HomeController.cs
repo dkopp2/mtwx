@@ -17,11 +17,6 @@ namespace Mtwx.Web.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Login(User user)
-        {
-            return RedirectToAction("Contact");
-        }
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
