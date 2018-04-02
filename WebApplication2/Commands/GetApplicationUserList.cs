@@ -7,18 +7,18 @@ using Mtwx.Web.Entities;
 
 namespace Mtwx.Web.Commands
 {
-    public class GetUsers : IRequest<IEnumerable<ApplicationUserEntity>>
+    public class GetApplicationUserList : IRequest<IEnumerable<ApplicationUserEntity>>
     {
         
     }
 
-    public class GetUsersHandler : SqlHandlerBase<GetUsers, IEnumerable<ApplicationUserEntity>>
+    public class GetApplicationUserListHandler : SqlHandlerBase<GetApplicationUserList, IEnumerable<ApplicationUserEntity>>
     {
-        public GetUsersHandler(Func<DataConnectionType, IDbConnection> connectionFactory) : base(connectionFactory)
+        public GetApplicationUserListHandler(Func<DataConnectionType, IDbConnection> connectionFactory) : base(connectionFactory)
         {
         }
 
-        protected override string GetSql(GetUsers message)
+        protected override string GetSql(GetApplicationUserList message)
         {
             return @"SELECT 
                             [Id]

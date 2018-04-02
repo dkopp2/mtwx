@@ -56,7 +56,7 @@ namespace Mtwx.Web.Controllers
 
                     var userData = new AppUserState(user);
 
-                    AuthenticationHelper.IdentitySignin(userData, model.RememberMe);
+                    AuthenticationHelper.IdentitySignin(userData, false);
                     return RedirectToAction("Index", "Home");
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");

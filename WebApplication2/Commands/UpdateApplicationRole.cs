@@ -5,19 +5,15 @@ using Mtwx.Web.Data;
 
 namespace Mtwx.Web.Commands
 {
-    public class UpdateApplicationRole : IRequest<int>
+    public class UpdateApplicationRole : UpdateCommand, IRequest<int>
     {
-        public int Id { get; }
         public string RoleName { get; }
         public string Description { get; }
-        public string ModifiedBy { get; }
 
-        public UpdateApplicationRole(int id, string roleName, string description, string modifiedBy)
+        public UpdateApplicationRole(int id, string roleName, string description, string modifiedBy) : base(id, modifiedBy)
         {
-            Id = id;
             RoleName = roleName;
             Description = description;
-            ModifiedBy = modifiedBy;
         }
     }
     public class UpdateApplicationRoleHandler : SqlHandlerBase<UpdateApplicationRole, int>

@@ -9,7 +9,8 @@ namespace Mtwx.Web
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
-                        "~/Scripts/umd/popper.js"));
+                        "~/Scripts/umd/popper.js",
+                        "~/Content/selectize/js/standalone/selectize.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -25,7 +26,9 @@ namespace Mtwx.Web
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/Selectize/css/selectize.css"));
+
         }
     }
 }

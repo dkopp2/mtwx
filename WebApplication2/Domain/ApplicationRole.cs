@@ -1,11 +1,18 @@
-﻿namespace Mtwx.Web.Domain
+﻿using System.Collections.Generic;
+
+namespace Mtwx.Web.Domain
 {
-    public class ApplicationRole
+    public class ApplicationRole : DomainObject
     {
-        public int Id { get; set; }
+        public ApplicationRole()
+        {
+            ExternalSites = new List<ExternalSite>();
+        }
+
         public string RoleName { get; set; }
         public string Description { get; set; }
 
+        public ICollection<ExternalSite> ExternalSites { get; }
         /// <summary>
         /// Exports a short string list of Id, Email, Name separated by |
         /// </summary>

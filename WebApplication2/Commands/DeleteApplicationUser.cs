@@ -25,6 +25,7 @@ namespace Mtwx.Web.Commands
         {
             return @"
                 DELETE FROM ApplicationUserApplicationRole WHERE UserId = @Id;
+                DELETE FROM ApplicationUserExternalSite WHERE ApplicationUserId = @Id;
                 DELETE FROM ApplicationUser WHERE Id = @Id;
             ";
         }

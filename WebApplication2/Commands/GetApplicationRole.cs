@@ -28,6 +28,10 @@ namespace Mtwx.Web.Commands
                         [Id]
                         ,[RoleName]
                         ,[Description]
+                          ,[CreateDate]
+                          ,[CreatedBy]
+                          ,[ModifiedDate]
+                          ,[ModifiedBy]
                       FROM 
                         [dbo].[ApplicationRole]
                         WHERE

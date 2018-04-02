@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Data;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Dapper;
 using MediatR;
 using Mtwx.Web.Data;
+using Mtwx.Web.Entities;
 
 namespace Mtwx.Web.Commands
 {
-    public class CreateApplicationRole : IRequest<int>
+    public class CreateApplicationRole : IRequest<ApplicationRoleEntity>
     {
         public string RoleName { get;  }
         public string Description { get; }
@@ -19,7 +24,7 @@ namespace Mtwx.Web.Commands
         }
     }
 
-    public class CreateApplicationRoleHandler : SqlHandlerBase<CreateApplicationRole, int>
+    public class CreateApplicationRoleHandler : SqlHandlerBase<CreateApplicationRole, ApplicationRoleEntity>
     {
         public CreateApplicationRoleHandler(Func<DataConnectionType, IDbConnection> connectionFactory) : base(connectionFactory)
         {
@@ -27,7 +32,10 @@ namespace Mtwx.Web.Commands
 
         protected override string GetSql(CreateApplicationRole message)
         {
-            return @"INSERT INTO [dbo].[ApplicationRole]
+            return @"
+                    DECLARE @NewId INT
+
+                    INSERT INTO [dbo].[ApplicationRole]
                            ([RoleName]
                            ,[Description]
                                 , [CreatedBy]
@@ -41,7 +49,35 @@ namespace Mtwx.Web.Commands
                                 , @CreatedBy
                                 , CURRENT_TIMESTAMP
                                 , @CreatedBy
-                                , CURRENT_TIMESTAMP); ";
+                                , CURRENT_TIMESTAMP);
+
+                    SELECT 
+                        @NewId = CAST(SCOPE_IDENTITY() as int);
+
+                    SELECT 
+                        [Id]
+                        ,[RoleName]
+                        ,[Description]
+                          ,[CreateDate]
+                          ,[CreatedBy]
+                          ,[ModifiedDate]
+                          ,[ModifiedBy]
+                      FROM 
+                        [dbo].[ApplicationRole]
+                        WHERE
+                            [Id] = @NewId; ";
+        }
+
+        public override Task<ApplicationRoleEntity> Handle(CreateApplicationRole message, CancellationToken cancellationToken)
+        {
+             return Task.Run(() =>
+            {
+                using (var cn = ConnectionFactory(ConnectionType))
+                {
+                    var cmd = GetSql(message);
+                    return cn.Query<ApplicationRoleEntity>(cmd, message).Single();
+                }
+            }, cancellationToken);
         }
     }
 }

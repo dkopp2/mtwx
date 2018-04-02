@@ -1,0 +1,126 @@
+﻿@model Mtwx.Web.Models.ApplicationUserViewModel
+
+@{
+    ViewBag.Title = "Create New User";
+}
+
+<div class="row" style="margin-top: 10px;">
+    <div class="col col-md-2">
+        <div class="sidebar-nav-fixed affix">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item"><a class="nav-link" id="saveButton" href="#">Save</a></li>
+                    <li class="nav-item">@Html.ActionLink("Cancel", "Index", "ApplicationUser", new { Area = "Admin" }, new { @class = "nav-link" })</li>
+                </ul>
+        </div>
+    </div>
+    <div class="col col-md-10 card">
+        <div class="card-header">
+            <div class="card-title">@ViewBag.Title</div>
+        </div>
+        @using (Html.BeginForm("Create", "ApplicationUser", new { Area = "Admin" }, FormMethod.Post, new { id = "mainForm" })) 
+        {
+            
+            @Html.AntiForgeryToken()
+
+            <div class="card-body">
+                <div class="form-row">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.Email) 
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.Password)
+                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.FirstName)
+                        @Html.EditorFor(model => model.FirstName, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new {@class = "text-danger"})
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.LastName)
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        @Html.LabelFor(model => model.ApplicationRolesCsv)
+                        @Html.TextBoxFor(m => m.ApplicationRolesCsv, new { @class = "no-max-width" })
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        @Html.LabelFor(model => model.ExternalSitesCsv)
+                        @Html.TextBoxFor(m => m.ExternalSitesCsv, new { @class = "no-max-width" })
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $('#saveButton').on('click', function(e) {
+                e.preventDefault();
+                $('#mainForm').submit();
+            });
+
+            $('#ApplicationRolesCsv').selectize({
+                preload: true,
+                plugins: ['remove_button'],
+                options: @Html.Raw(Json.Encode(Model.ApplicationRoles.Select(x => new {x.Id, x.RoleName}))),
+                hideSelected: true,
+                delimter: ',',
+                persist: false,
+                valueField: 'Id',
+                labelField: 'RoleName',
+                searchField: 'RoleName',
+                openOnFocus: true,
+                create: false,
+                render: {
+                    option: function(item, escape) {
+                        return '<div>' + escape(item.RoleName) + '</div>';
+                    }
+                }
+            });
+
+            $('#ExternalSitesCsv').selectize({
+                preload: true,
+                plugins: ['remove_button'],
+                options: @Html.Raw(Json.Encode(Model.ExternalSites.Select(x => new {x.Id, x.Name}))),
+                hideSelected: true,
+                delimter: ',',
+                persist: false,
+                valueField: 'Id',
+                labelField: 'Name',
+                searchField: 'Name',
+                openOnFocus: true,
+                create: false,
+                render: {
+                    option: function(item, escape) {
+                        return '<div>' + escape(item.Name) + '</div>';
+                    }
+                }
+            });
+
+        });
+
+    </script>
+}
+
+

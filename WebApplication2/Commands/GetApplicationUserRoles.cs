@@ -8,7 +8,6 @@ using Mtwx.Web.Entities;
 namespace Mtwx.Web.Commands
 {
 
-
     public class GetApplicationUserRoles : IRequest<IEnumerable<ApplicationRoleEntity>>
     {
         public int UserId { get; }

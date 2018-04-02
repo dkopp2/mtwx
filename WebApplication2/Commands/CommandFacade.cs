@@ -106,21 +106,46 @@ namespace Mtwx.Web.Commands
             var cmd = new GetApplicationRole(roleId);
             var role = await _mediator.Send(cmd);
 
-            return new ApplicationRole { Id = role.Id, RoleName = role.RoleName, Description = role.Description };
+            var cmd2 = new GetApplicationRoleExternalSiteList(roleId);
+            var sites = await _mediator.Send(cmd2);
+
+            var retval =  new ApplicationRole { Id = role.Id, RoleName = role.RoleName, Description = role.Description };
+            foreach (var site in sites)
+            {
+                retval.ExternalSites.Add(new ExternalSite()
+                {
+                    Description = site.Description,
+                    Id = site.Id,
+                    Name = site.Name,
+                    FormId = site.FormId,
+                    Href = site.Href,
+                    FormPasswordField = site.FormPasswordField,
+                    FormUserIdField = site.FormUserIdField,
+                    SiteUserId = site.SiteUserId,
+                    LoginAction = site.LoginAction,
+                    SitePassword = site.SitePassword
+                });
+            }
+
+            return retval;
         }
 
-        public async Task<int> CreateApplicationRole(string roleName, string description)
+        public async Task CreateApplicationRole(ApplicationRole role, string userName)
         {
-            var userName = HttpContext.Current.User.Identity.Name;
-            var cmd = new CreateApplicationRole(roleName, description, userName);
-            return await _mediator.Send(cmd);
+            var cmd = new CreateApplicationRole(role.RoleName,role.Description, userName);
+            var roleEntity = await _mediator.Send(cmd);
+
+            var cmd3 = new SetRoleExternalSites(roleEntity.Id, role.ExternalSites.Select(x => x.Id));
+            await _mediator.Send(cmd3);
         }
 
-        public async Task<int> UpdateApplicationRole(int id, string roleName, string description)
+        public async Task<int> UpdateApplicationRole(ApplicationRole role, string userName)
         {
-            var userName = HttpContext.Current.User.Identity.Name;
-            var cmd = new UpdateApplicationRole(id, roleName, description, userName);
-            return await _mediator.Send(cmd);
+            var cmd = new UpdateApplicationRole(role.Id, role.RoleName, role.Description, userName);
+            await _mediator.Send(cmd);
+
+            var cmd3 = new SetRoleExternalSites(role.Id, role.ExternalSites.Select(x => x.Id));
+            return await _mediator.Send(cmd3);
         }
 
         public async Task<int> DeleteApplicationRole(int id)
@@ -129,9 +154,9 @@ namespace Mtwx.Web.Commands
             return await _mediator.Send(cmd);
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetUsers()
+        public async Task<IEnumerable<ApplicationUser>> GetApplicationUserList()
         {
-            var cmd = new GetUsers();
+            var cmd = new GetApplicationUserList();
             var users = await _mediator.Send(cmd);
 
             return users.Select(r => new ApplicationUser()
@@ -149,7 +174,13 @@ namespace Mtwx.Web.Commands
             var cmd = new GetApplicationUser(id);
             var user = await _mediator.Send(cmd);
 
-            return new ApplicationUser()
+            var rolesCmd = new GetApplicationUserRoles(user.Id);
+            var roles = await _mediator.Send(rolesCmd);
+
+            var sitesCmd = new GetUserExternalSiteList(user.Id);
+            var sites = await _mediator.Send(sitesCmd);
+
+            var retval = new ApplicationUser()
             {
                 Id = user.Id,
                 Email = user.Email,
@@ -157,13 +188,48 @@ namespace Mtwx.Web.Commands
                 LastName = user.LastName,
                 FirstName = user.FirstName
             };
+
+            foreach (var role in roles)
+            {
+                retval.ApplicationRoles.Add(new ApplicationRole() {
+                    Description = role.Description,
+                    Id = role.Id,
+                    RoleName = role.RoleName
+                });
+            }
+
+            foreach (var site in sites)
+            {
+                retval.ExternalSites.Add(new ExternalSite()
+                {
+                    Description = site.Description,
+                    Id = site.Id,
+                    Name = site.Name,
+                    FormId = site.FormId,
+                    Href = site.Href,
+                    FormPasswordField = site.FormPasswordField,
+                    FormUserIdField = site.FormUserIdField,
+                    SiteUserId = site.SiteUserId,
+                    LoginAction = site.LoginAction,
+                    SitePassword = site.SitePassword
+                });
+            }
+
+            return retval;
         }
 
-        public async Task<int> CreateApplicationUser(string email, string password, string firstName, string lastName)
+        public async Task CreateApplicationUser(ApplicationUser user, string userName)
         {
-            var userName = HttpContext.Current.User.Identity.Name;
-            var cmd = new CreateApplicationUser(email, password, firstName, lastName, userName);
-            return await _mediator.Send(cmd);
+            // var userName = HttpContext.Current.User.Identity.Name;
+            var cmd = new CreateApplicationUser(user.Email, user.Password, user.FirstName, user.LastName, userName);
+            var newUser =  await _mediator.Send(cmd);
+
+            var cmd2 = new SetUserApplicationRoles(newUser.Id, user.ApplicationRoles.Select(x => x.Id));
+            await _mediator.Send(cmd2);
+
+            var cmd3 = new SetUserExternalSites(newUser.Id, user.ExternalSites.Select(x => x.Id));
+            await _mediator.Send(cmd3);
+
         }
 
         public async Task<int> ClearUserRoles(int userId)
@@ -178,17 +244,22 @@ namespace Mtwx.Web.Commands
             return await _mediator.Send(cmd);
         }
 
-        public async Task<int> DeleteApplicationUser(int userId)
+        public async Task<int> DeleteApplicationUser(int id)
         {
-            var cmd = new DeleteApplicationUser(userId);
+            var cmd = new DeleteApplicationUser(id);
             return await _mediator.Send(cmd);
         }
 
-        public async Task<int> UpdateApplicationUser(ApplicationUser user)
+        public async Task<int> UpdateApplicationUser(ApplicationUser user, string userName)
         {
-            var userName = HttpContext.Current.User.Identity.Name;
             var cmd = new UpdateApplicationUser(user.Id, user.Email, user.Password, user.FirstName, user.LastName, userName);
-            return await _mediator.Send(cmd);
+            await _mediator.Send(cmd);
+
+            var cmd2 = new SetUserApplicationRoles(user.Id, user.ApplicationRoles.Select(x => x.Id));
+            await _mediator.Send(cmd2);
+
+            var cmd3 = new SetUserExternalSites(user.Id, user.ExternalSites.Select(x => x.Id));
+            return await _mediator.Send(cmd3);
         }
 
         public async Task<ApplicationUser> GetUserByEmail(string email)
@@ -200,6 +271,9 @@ namespace Mtwx.Web.Commands
 
             var rolesCmd = new GetApplicationUserRoles(result.Id);
             var roles = await _mediator.Send(rolesCmd);
+
+            var sitesCmd = new GetUserExternalSiteList(result.Id);
+            var sites = await _mediator.Send(sitesCmd);
 
             var retval = new ApplicationUser
             {
@@ -218,10 +292,84 @@ namespace Mtwx.Web.Commands
                     Description = r.Description,
                     RoleName = r.RoleName
                 });
-            };
+            }
+
+            foreach (var s in sites)
+            {
+                retval.ExternalSites.Add(new ExternalSite()
+                {
+                    Name = s.Name,
+                    Id = s.Id,
+                    Description = s.Description,
+                    SiteUserId = s.SiteUserId,
+                    SitePassword = s.SitePassword,
+                    FormId = s.FormId,
+                    Href = s.Href,
+                    FormUserIdField = s.FormUserIdField,
+                    FormPasswordField = s.FormPasswordField,
+                    LoginAction = s.LoginAction
+                });
+            }
 
             return retval;
         }
 
+        public async Task<IEnumerable<ExternalSite>> GetExternalSiteList()
+        {
+            var cmd = new GetExternalSiteList();
+            var results = await _mediator.Send(cmd);
+
+            return results.Select(x => new ExternalSite()
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                FormId = x.FormId,
+                FormPasswordField = x.FormPasswordField,
+                FormUserIdField = x.FormUserIdField,
+                Href = x.Href,
+                LoginAction = x.LoginAction,
+                SitePassword = x.SitePassword,
+                SiteUserId = x.SiteUserId
+            });
+        }
+
+        public async Task<ExternalSite> GetExternalSite(int id)
+        {
+            var cmd = new GetExternalSite(id);
+            var result = await _mediator.Send(cmd);
+
+            return  new ExternalSite()
+            {
+                Id = result.Id,
+                Name = result.Name,
+                Description = result.Description,
+                FormId = result.FormId,
+                FormPasswordField = result.FormPasswordField,
+                FormUserIdField = result.FormUserIdField,
+                Href = result.Href,
+                LoginAction = result.LoginAction,
+                SitePassword = result.SitePassword,
+                SiteUserId = result.SiteUserId
+            };
+        }
+
+        public async Task<int> CreateExternalSite(ExternalSite model, string createdBy)
+        {
+            var cmd = new CreateExternalSite(model.Name,model.Description, model.FormId, model.Href, model.LoginAction, model.SiteUserId, model.SitePassword, model.FormUserIdField, model.FormPasswordField, createdBy);
+            return await _mediator.Send(cmd);
+        }
+
+        public async Task<int> UpdateExternalSite(ExternalSite model, string updatedBy)
+        {
+            var cmd = new UpdateExternalSite(model.Name, model.Description, model.FormId, model.Href, model.LoginAction, model.SiteUserId, model.SitePassword, model.FormUserIdField, model.FormPasswordField, model.Id, updatedBy);
+            return await _mediator.Send(cmd);
+        }
+
+        public async Task<int> DeleteExternalSite(int id)
+        {
+            var cmd = new DeleteExternalSite(id);
+            return await _mediator.Send(cmd);
+        }
     }
 }

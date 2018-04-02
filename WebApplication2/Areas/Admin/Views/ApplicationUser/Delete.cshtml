@@ -1,0 +1,25 @@
+﻿@model Mtwx.Web.Domain.ApplicationUser
+
+<h3>Are you sure you want to delete @Model.Email?</h3>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            @Html.ActionLink("Yes", "Delete", "ApplicationUser", new { area = "Admin", id = Model.Id }, new { @class = "btn btn-primary", id = "confirmDelete", onclick = "return false;" })
+            @Html.ActionLink("No", "Index", null, new { @class = "btn btn-primary" })
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#confirmDelete').on("click", function () {
+                $(this).closest('form')[0].submit();
+            });
+        });
+    </script>
+}
+

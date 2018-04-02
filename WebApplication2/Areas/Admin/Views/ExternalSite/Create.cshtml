@@ -1,0 +1,92 @@
+﻿
+@model Mtwx.Web.Domain.ExternalSite
+@{
+    ViewBag.Title = "Create New External Site";
+}
+<div class="row" style="margin-top: 10px;">
+    <div class="col col-md-2">
+        <div class="sidebar-nav-fixed affix">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item"><a class="nav-link" id="saveButton" href="#">Save</a></li>
+                <li class="nav-item">@Html.ActionLink("Cancel", "Index", "ApplicationRole", new { Area = "Admin" }, new { @class = "nav-link" })</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col col-md-10 card">
+        <div class="card-header">
+            <div class="card-title">@ViewBag.Title</div>
+        </div>
+        @using (Html.BeginForm("Create", "ExternalSite", new { Area = "Admin" }, FormMethod.Post, new { id = "mainForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="card-body">
+                <div class="form-row">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        @Html.LabelFor(m => m.Name)
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-6 form-group">
+                        @Html.LabelFor(model => model.Description)
+                        @Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-12 form-group">
+                        @Html.LabelFor(model => model.FormId)
+                        @Html.TextBoxFor(m => m.FormId, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-12 form-group">
+                        @Html.LabelFor(model => model.Href)
+                        @Html.TextBoxFor(m => m.Href, new { @class = "form-control no-max-width", type = "url" })
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-12 form-group">
+                        @Html.LabelFor(model => model.LoginAction)
+                        @Html.TextBoxFor(m => m.LoginAction, new { @class = "form-control no-max-width", type = "url" })
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        @Html.LabelFor(model => model.SiteUserId)
+                        @Html.TextBoxFor(m => m.SiteUserId, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-6 form-group">
+                        @Html.LabelFor(model => model.SitePassword)
+                        @Html.TextBoxFor(m => m.SitePassword, new { @class = "form-control" })
+
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        @Html.LabelFor(model => model.FormUserIdField)
+
+                        @Html.TextBoxFor(m => m.FormUserIdField, new { @class = "form-control" })
+
+                    </div>
+                    <div class="col-md-6 form-group">
+                        @Html.LabelFor(model => model.FormPasswordField)
+                        @Html.TextBoxFor(m => m.FormPasswordField, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#saveButton').on('click', function (e) {
+                e.preventDefault();
+                $('#mainForm').submit();
+            });
+        });
+    </script>
+}

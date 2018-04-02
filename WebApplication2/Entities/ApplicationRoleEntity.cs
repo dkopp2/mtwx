@@ -1,8 +1,7 @@
 ﻿namespace Mtwx.Web.Entities
 {
-    public class ApplicationRoleEntity
+    public class ApplicationRoleEntity : EntityBase
     {
-        public int Id { get; set; }
         public string RoleName { get; set; }
         public string Description { get; set; }
     }

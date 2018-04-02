@@ -6,6 +6,7 @@ using Mtwx.Web.Entities;
 
 namespace Mtwx.Web.Commands
 {
+
     public class GetApplicationUser : IRequest<ApplicationUserEntity>
     {
         public int Id { get; }
