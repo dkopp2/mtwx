@@ -16,13 +16,7 @@ namespace Mtwx.Web.Security
 
         public async Task<LoginResponse> Login(string email, string password)
         {
-            var user = await _commandFacade.GetUserByEmail(email);
-            var retval = new LoginResponse {ReturnType = LoginReturnTypes.Error};
-
-            // compare the passwords
-            if (email != "dkopp2@gmail.com" && user == null) return retval;
-
-            var clearPwd = user.Password.Unprotect();
+            var retval = new LoginResponse { ReturnType = LoginReturnTypes.InvalidUserName };
 
             if (email == "dkopp2@gmail.com")
             {
@@ -34,11 +28,25 @@ namespace Mtwx.Web.Security
                     Email = email,
                     Id = -9999
                 };
-                retval.ApplicationUser.ApplicationRoles.Add(new ApplicationRole() {Description = "Admin", Id = 1, RoleName = "Admin"});
+                retval.ApplicationUser.ApplicationRoles.Add(new ApplicationRole()
+                {
+                    Description = "Admin",
+                    Id = 1,
+                    RoleName = "Admin"
+                });
 
                 retval.ReturnType = LoginReturnTypes.Success;
+                return retval;
             }
-            else if (clearPwd == password)
+
+            var user = await _commandFacade.GetUserByEmail(email);
+
+            // compare the passwords
+            if (user == null) return retval;
+
+            var clearPwd = user.Password.Unprotect();
+
+            if (clearPwd == password)
             {
                 user.Password = string.Empty;
                 retval.ApplicationUser = user;
