@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Mtwx.Web.Commands;
 using Mtwx.Web.Domain;
 
@@ -16,12 +17,12 @@ namespace Mtwx.Web.Security
         public async Task<LoginResponse> Login(string email, string password)
         {
             var user = await _commandFacade.GetUserByEmail(email);
-            var enteredPwd = password.EncryptString();
-
             var retval = new LoginResponse {ReturnType = LoginReturnTypes.Error};
 
             // compare the passwords
             if (email != "dkopp2@gmail.com" && user == null) return retval;
+
+            var clearPwd = user.Password.Unprotect();
 
             if (email == "dkopp2@gmail.com")
             {
@@ -37,7 +38,7 @@ namespace Mtwx.Web.Security
 
                 retval.ReturnType = LoginReturnTypes.Success;
             }
-            else if (user.Password == enteredPwd)
+            else if (clearPwd == password)
             {
                 user.Password = string.Empty;
                 retval.ApplicationUser = user;

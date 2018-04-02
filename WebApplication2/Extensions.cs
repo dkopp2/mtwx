@@ -9,22 +9,34 @@ namespace Mtwx.Web
 {
     public static class StringExtensions
     {
-        internal static string EncryptString(this string data)
+        public static string Protect(
+            this string clearText,
+            string optionalEntropy = null,
+            DataProtectionScope scope = DataProtectionScope.CurrentUser)
         {
-            // Data to protect. Convert a string to a byte[] using Encoding.UTF8.GetBytes().
-            var plaintext = Encoding.UTF8.GetBytes(data);
+            if (clearText == null)
+                throw new ArgumentNullException(nameof(clearText));
+            byte[] clearBytes = Encoding.UTF8.GetBytes(clearText);
+            byte[] entropyBytes = string.IsNullOrEmpty(optionalEntropy)
+                ? null
+                : Encoding.UTF8.GetBytes(optionalEntropy);
+            byte[] encryptedBytes = ProtectedData.Protect(clearBytes, entropyBytes, scope);
+            return Convert.ToBase64String(encryptedBytes);
+        }
 
-            // Generate additional entropy (will be used as the Initialization vector)
-            var entropy = new byte[20];
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                rng.GetBytes(entropy);
-            }
-
-            var ciphertext = ProtectedData.Protect(plaintext, entropy,
-                DataProtectionScope.CurrentUser);
-
-            return Encoding.UTF8.GetString(ciphertext);
+        public static string Unprotect(
+            this string encryptedText,
+            string optionalEntropy = null,
+            DataProtectionScope scope = DataProtectionScope.CurrentUser)
+        {
+            if (encryptedText == null)
+                throw new ArgumentNullException(nameof(encryptedText));
+            byte[] encryptedBytes = Convert.FromBase64String(encryptedText);
+            byte[] entropyBytes = string.IsNullOrEmpty(optionalEntropy)
+                ? null
+                : Encoding.UTF8.GetBytes(optionalEntropy);
+            byte[] clearBytes = ProtectedData.Unprotect(encryptedBytes, entropyBytes, scope);
+            return Encoding.UTF8.GetString(clearBytes);
         }
     }
     public static class EnumerableExtensions

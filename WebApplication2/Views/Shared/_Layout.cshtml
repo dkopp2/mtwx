@@ -13,17 +13,12 @@
 <body>
 @if (isAuthenticated)
 {
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-primary rounded">
     @Html.ActionLink("Site Access Wrapper", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-
+        <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown">
-                <div class="btn btn-danger" data-toggle="popover" data-content="Simply choose a site to navigate to and all of your dreams will come true." data-placement="bottom" data-trigger="hover">Choose...</div>
-                <button data-toggle="dropdown" class="btn btn-danger dropdown-toggle"><span class="caret"></span></button>
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose a site...</a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a id="homesteadVillage"
                        class="dropdown-item"
@@ -65,8 +60,13 @@
                        data-user-id-field="navbar_username"
                        data-password-field="navbar_password">Evoque Forums</a>
                 </div>
+                <div class></div>
             </li>
-            
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                @Html.ActionLink("Logoff", "LogOff", "Account", null, new {@class = "nav-link"})
+            </li>
         </ul>
     </div>
 </nav>

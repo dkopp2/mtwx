@@ -31,6 +31,10 @@ namespace Mtwx.Web.Commands
                                 , [Password]
                                 , [FirstName]
                                 , [LastName]
+                          ,[CreateDate]
+                          ,[CreatedBy]
+                          ,[ModifiedDate]
+                          ,[ModifiedBy]
                         FROM 
                             [dbo].[ApplicationUser] au
                         WHERE

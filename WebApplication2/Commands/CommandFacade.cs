@@ -371,5 +371,6 @@ namespace Mtwx.Web.Commands
             var cmd = new DeleteExternalSite(id);
             return await _mediator.Send(cmd);
         }
+
     }
 }

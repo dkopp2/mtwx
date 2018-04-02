@@ -49,7 +49,8 @@ namespace Mtwx.Web.Areas.Admin.Controllers
                 {
                     Email = model.Email,
                     FirstName = model.FirstName,
-                    LastName = model.LastName
+                    LastName = model.LastName,
+                    Password = model.Password == null ? string.Empty : model.Password.Protect()
                 };
 
                 if (!string.IsNullOrEmpty(model.ApplicationRolesCsv))
@@ -97,7 +98,7 @@ namespace Mtwx.Web.Areas.Admin.Controllers
                 Id = user.Id,
                 LastName = user.LastName,
                 FirstName = user.FirstName,
-                Password = user.Password,
+                Password = user.Password == null ? string.Empty : user.Password.Unprotect(),
                 Email = user.Email,
                 ExternalSitesCsv = string.Join(",", user.ExternalSites.Select(x => x.Id.ToString())),
                 ApplicationRolesCsv = string.Join(",", user.ApplicationRoles.Select(x => x.Id.ToString()))
@@ -118,10 +119,11 @@ namespace Mtwx.Web.Areas.Admin.Controllers
                 var userName = User.Identity.Name;
                 // update the user
                 var user = await CommandFacade.GetApplicationUser(model.Id);
+
                 user.Email = model.Email;
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
-                user.Password = model.Password;
+                user.Password = model.Password == null ? string.Empty : model.Password.Protect();
 
                 user.ApplicationRoles.Clear();
                 if (!string.IsNullOrEmpty(model.ApplicationRolesCsv))

@@ -69,8 +69,6 @@ namespace Mtwx.Web.Controllers
         //
         // POST: /Account/LogOff
         [AllowAnonymous]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
