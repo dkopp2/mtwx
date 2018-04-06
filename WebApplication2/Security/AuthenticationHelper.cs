@@ -13,6 +13,13 @@ namespace Mtwx.Web.Security
 
     public static class AuthenticationHelper
     {
+        public static string GetClaimValue(string claimType)
+        {
+            var identity = (ClaimsIdentity)HttpContext.Current.User.Identity;
+            var claims = identity.Claims;
+            return claims.FirstOrDefault(x => x.Type == claimType)?.Value;
+        }
+
         public static void IdentitySignin(AppUserState userState, bool isPersistent = false)
         {
             var claims = new List<Claim>

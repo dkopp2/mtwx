@@ -169,6 +169,25 @@ namespace Mtwx.Web.Commands
             });
         }
 
+        public async Task<IEnumerable<ExternalSite>> GetCurrentUserSiteList(string currentUser)
+        {
+            var cmd = new GetCurrentUserAllowedSiteList(currentUser);
+            var results = await _mediator.Send(cmd);
+
+            return results.Select(x => new ExternalSite()
+            {
+                Description = x.Description,
+                FormId = x.FormId,
+                FormPasswordField = x.FormPasswordField,
+                FormUserIdField = x.FormUserIdField,
+                Href = x.Href,
+                Id = x.Id,
+                LoginAction = x.LoginAction,
+                Name = x.Name,
+                SitePassword = x.SitePassword,
+                SiteUserId = x.SiteUserId
+            });
+        }
         public async Task<ApplicationUser> GetApplicationUser(int id)
         {
             var cmd = new GetApplicationUser(id);

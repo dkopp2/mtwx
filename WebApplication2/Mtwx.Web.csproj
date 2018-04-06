@@ -238,6 +238,7 @@
     <Compile Include="Commands\GetApplicationUser.cs" />
     <Compile Include="Commands\GetApplicationUserByUserName.cs" />
     <Compile Include="Commands\GetApplicationUserRoles.cs" />
+    <Compile Include="Commands\GetCurrentUserAllowedSiteList.cs" />
     <Compile Include="Commands\GetExternalSite.cs" />
     <Compile Include="Commands\GetExternalSiteList.cs" />
     <Compile Include="Commands\GetUserByEmail.cs" />
