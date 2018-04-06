@@ -1,9 +1,14 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using Mtwx.Web.Commands;
+using Mtwx.Web.Domain;
 using Mtwx.Web.Models;
 
 namespace Mtwx.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public ActionResult Index()
         {
@@ -22,6 +27,17 @@ namespace Mtwx.Web.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        [ChildActionOnly]
+        public ActionResult SiteMenu()
+        {
+            var sites = AsyncHelpers.RunSync(() => CommandFacade.GetExternalSiteList());
+            return PartialView("_SiteMenu", sites);
+        }
+
+        public HomeController(CommandFacade commandFacade) : base(commandFacade)
+        {
         }
     }
 }

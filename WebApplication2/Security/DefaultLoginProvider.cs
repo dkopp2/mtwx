@@ -44,7 +44,7 @@ namespace Mtwx.Web.Security
             // compare the passwords
             if (user == null) return retval;
 
-            var clearPwd = user.Password.Unprotect();
+            var clearPwd = user.Password.TryUnprotect(defaultValue: user.Password);
 
             if (clearPwd == password)
             {

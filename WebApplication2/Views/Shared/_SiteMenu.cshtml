@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Mtwx.Web.Domain.ExternalSite>
+    
+@foreach (var site in Model)
+{
+    <a id="@site.FormId"
+       class="dropdown-item"
+       href="#"
+       data-href="@site.Href"
+       data-login-action="@site.LoginAction"
+       data-user-id="@site.SiteUserId"
+       data-password="@site.SitePassword"
+       data-user-id-field="@site.FormUserIdField"
+       data-password-field="@site.FormPasswordField">@site.Name</a>
+}
+

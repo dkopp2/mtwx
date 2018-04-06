@@ -98,7 +98,7 @@ namespace Mtwx.Web.Areas.Admin.Controllers
                 Id = user.Id,
                 LastName = user.LastName,
                 FirstName = user.FirstName,
-                Password = user.Password == null ? string.Empty : user.Password.Unprotect(),
+                Password = user.Password == null ? string.Empty : user.Password.TryUnprotect(defaultValue:user.Password),
                 Email = user.Email,
                 ExternalSitesCsv = string.Join(",", user.ExternalSites.Select(x => x.Id.ToString())),
                 ApplicationRolesCsv = string.Join(",", user.ApplicationRoles.Select(x => x.Id.ToString()))

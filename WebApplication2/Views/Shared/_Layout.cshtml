@@ -20,47 +20,8 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose a site...</a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a id="homesteadVillage"
-                       class="dropdown-item"
-                       href="#"
-                       data-href="https://www.homesteadvillage.org/login/"
-                       data-login-action="https://www.homesteadvillage.org/login/"
-                       data-user-id="Village"
-                       data-password="1800Marietta"
-                       data-user-id-field="user_login"
-                       data-password-field="user_pass">Homestead Village</a>
-
-                    <a id="myFreeCycle"
-                       class="dropdown-item"
-                       href="#"
-                       data-href="https://my.freecycle.org/"
-                       data-login-action="https://my.freecycle.org/login"
-                       data-user-id="Pontist"
-                       data-password="monkey"
-                       data-user-id-field="username"
-                       data-password-field="pass">My Freecycle</a>
-
-                    <a id="volvoCommunity"
-                       class="dropdown-item"
-                       href="#"
-                       data-href="https://www.volvoforums.org.uk/"
-                       data-login-action="https://www.volvoforums.org.uk/login.php?do=login"
-                       data-user-id="Cat_Herder"
-                       data-password="monkey"
-                       data-user-id-field="navbar_username"
-                       data-password-field="navbar_password">Volvo Community</a>
-
-                    <a id="evoqueForums"
-                       class="dropdown-item"
-                       href="#"
-                       data-href="http://www.evoqueforums.net/"
-                       data-login-action="http://www.evoqueforums.net/forum/login.php?do=login"
-                       data-user-id="Yak_Lorry"
-                       data-password="EVO6suzidic"
-                       data-user-id-field="navbar_username"
-                       data-password-field="navbar_password">Evoque Forums</a>
+                    @Html.Action("SiteMenu", "Home")
                 </div>
-                <div class></div>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
